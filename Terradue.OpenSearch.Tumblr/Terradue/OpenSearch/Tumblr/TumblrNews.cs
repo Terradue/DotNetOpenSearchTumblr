@@ -19,7 +19,7 @@ using Terradue.OpenSearch.Response;
 using Terradue.OpenSearch.Engine;
 using Terradue.ServiceModel.Syndication;
 
-namespace Terradue.OpenSearch.Controller {
+namespace Terradue.OpenSearch.Tumblr {
     public class TumblrNews : Article, IOpenSearchable {
     
         /// <summary>

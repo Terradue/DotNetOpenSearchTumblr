@@ -7,6 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Terradue.OpenSearch.Tumblr</RootNamespace>
     <AssemblyName>Terradue.OpenSearch.Tumblr</AssemblyName>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,10 +30,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terradue\OpenSearch\Tumblr\TumblrNews.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Terradue.Portal\Terradue.Portal.csproj">
+      <Project>{2E8D7875-8347-4205-936B-F1BBA2164D87}</Project>
+      <Name>Terradue.Portal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Terradue.OpenSearch\Terradue.OpenSearch.csproj">
+      <Project>{EA911C65-7F54-4909-97AB-AF66C8069D3A}</Project>
+      <Name>Terradue.OpenSearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Terradue.ServiceModel.Syndication\Terradue.ServiceModel.Syndication.csproj">
+      <Project>{729A82DF-D3CE-4A1A-BA83-0508F0362DB5}</Project>
+      <Name>Terradue.ServiceModel.Syndication</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
