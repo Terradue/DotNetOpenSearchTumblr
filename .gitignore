@@ -1,6 +1,6 @@
 
 *.userprefs
 
-bin
+Terradue.OpenSearch.Tumblr/bin
 
-obj
+Terradue.OpenSearch.Tumblr/obj
