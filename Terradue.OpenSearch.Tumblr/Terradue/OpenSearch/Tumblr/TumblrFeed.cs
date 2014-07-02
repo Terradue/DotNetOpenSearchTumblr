@@ -3,10 +3,9 @@ using System.Web;
 using System.Net;
 using System.IO;
 using System.Text;
-using ServiceStack.Text;
+
 using System.Runtime.Serialization;
 using System.Collections.Generic;
-using Terradue.Portal;
 using Terradue.OpenSearch;
 using Terradue.OpenSearch.Request;
 using Terradue.OpenSearch.Schema;
@@ -18,39 +17,154 @@ using Terradue.OpenSearch.Result;
 using Terradue.OpenSearch.Response;
 using Terradue.OpenSearch.Engine;
 using Terradue.ServiceModel.Syndication;
+using ServiceStack.Text;
 
 namespace Terradue.OpenSearch.Tumblr {
-    public class TumblrNews : Article, IOpenSearchable {
-    
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Terradue.TepQW.Controller.TumblrNews"/> class.
-        /// </summary>
-        /// <param name="context">Context.</param>
-        public TumblrNews(IfyContext context) : base(context) {}
+
+    public class TumblrApplication {
 
         /// <summary>
-        /// Froms the identifier.
+        /// Gets or sets the Tumblr Api key.
         /// </summary>
-        /// <returns>The identifier.</returns>
-        /// <param name="context">Context.</param>
-        /// <param name="id">Identifier.</param>
-        public new static TumblrNews FromId(IfyContext context, int id){
-            return (TumblrNews)Article.FromId(context, id);
+        /// <value>The consumer key.</value>
+        public string ApiKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the API method used.
+        /// </summary>
+        /// <value>The API method.</value>
+        public string ApiMethod { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the API.
+        /// Specify one of the following:  text, quote, link, answer, video, audio, photo, chat
+        /// </summary>
+        /// <value>The type of the API.</value>
+        public string ApiType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tumblr API base URL.
+        /// </summary>
+        /// <value>The tumblr API base URL.</value>
+        public string ApiBaseUrl { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Terradue.OpenSearch.Tumblr.TumblrApplication"/> class.
+        /// </summary>
+        /// <param name="apiKey">API key.</param>
+        public TumblrApplication(string apiKey){
+            this.ApiKey = apiKey;
+            this.ApiMethod = "posts"; //Retrieve Published Posts
+            this.ApiType = "text";
+            this.ApiBaseUrl = "http://api.tumblr.com/v2/blog";
         }
 
-        public List<TumblrNews> GetFeeds(){
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Terradue.OpenSearch.Tumblr.TumblrApplication"/> class.
+        /// </summary>
+        /// <param name="apikey">Api key.</param>
+        /// <param name="apimethod">Api method.</param>
+        /// <param name="apitype">Api type.</param>
+        /// <param name="apibaseurl">Api baseurl.</param>
+        public TumblrApplication(string apikey, string apimethod, string apitype, string apibaseurl){
+            this.ApiKey = apikey;
+            this.ApiMethod = apimethod;
+            this.ApiType = apitype;
+            this.ApiBaseUrl = apibaseurl;
+        }
+
+    }
+
+    public class TumblrFeed : IOpenSearchable {
+
+        /// <summary>
+        /// Get the local identifier.
+        /// </summary>
+        /// <value>The local identifier of the OpenSearchable entity.</value>
+        public string Identifier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        /// <value>The title.</value>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the abstract.
+        /// </summary>
+        /// <value>The abstract.</value>
+        public string Abstract { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content.
+        /// </summary>
+        /// <value>The content.</value>
+        public string Content { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time.
+        /// </summary>
+        /// <value>The time.</value>
+        public DateTime Time { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author.
+        /// </summary>
+        /// <value>The author.</value>
+        public string Author { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>The tags.</value>
+        public string Tags { get; set; }
+    
+        /// <summary>
+        /// Gets or sets the application.
+        /// </summary>
+        /// <value>The application containing all keys.</value>
+        protected TumblrApplication Application { get; set; } 
+
+        /// <summary>
+        /// Gets or sets the base URL.
+        /// </summary>
+        /// <value>The base URL.</value>
+        protected string BaseUrl { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Terradue.OpenSearch.Tumblr.TumblrFeed"/> class.
+        /// </summary>
+        /// <param name="BaseUrl">Base URL.</param>
+        public TumblrFeed(string BaseUrl) {
+            this.BaseUrl = BaseUrl;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Terradue.OpenSearch.Tumblr.TumblrFeed"/> class.
+        /// </summary>
+        /// <param name="app">App.</param>
+        /// <param name="BaseUrl">Base URL.</param>
+        public TumblrFeed(TumblrApplication app, string BaseUrl) {
+            this.Application = app;
+            this.BaseUrl = BaseUrl;
+        }
+
+        /// <summary>
+        /// Gets the list of feeds.
+        /// </summary>
+        /// <returns>The feeds.</returns>
+        public List<TumblrFeed> GetFeeds(){
             string blogName = this.Author;
-            string tumblrBaseUrl = "http://api.tumblr.com/v2/blog";
-            string api = "posts";
-            string type = "text";
-            string apiKey = context.GetConfigValue("Tumblr-apikey");
 
-            List<TumblrNews> result = new List<TumblrNews>();
+            List<TumblrFeed> result = new List<TumblrFeed>();
 
-            //var client = new JsonServiceClient(tumblrBaseUrl+"/"+blogName+".tumblr.com/posts/text?api_key=5dmloJh2jq9ldxN9nFZdA477Kb4XrwtZQR3hLsjl0eW2HlsS0N");
-            //var response = client.Get(new TumblrRequest ());
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tumblrBaseUrl+"/"+blogName+".tumblr.com/"+api+"/"+type+"?api_key="+apiKey);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"/"+Application.ApiType+"?api_key="+Application.ApiKey);
             request.Method = "GET";
             request.ContentType = "application/json"; 
 
@@ -59,8 +173,7 @@ namespace Terradue.OpenSearch.Tumblr {
 
             TumblrResponse response = JsonSerializer.DeserializeFromString<TumblrResponse>(text);
             foreach(TumblrResponsePost post in response.response.posts){
-                TumblrNews news = new TumblrNews(context);
-                news.Id = 0;
+                TumblrFeed news = new TumblrFeed(this.BaseUrl);
                 news.Identifier = post.id.ToString();
                 news.Title = post.title;
                 news.Abstract = post.body;
@@ -74,13 +187,14 @@ namespace Terradue.OpenSearch.Tumblr {
             return result;
         }
 
+        /// <summary>
+        /// Generates the atom feed list.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <param name="parameters">Parameters.</param>
         void GenerateAtomFeed(Stream input, System.Collections.Specialized.NameValueCollection parameters) {
 
             string blogName = this.Author;
-            string tumblrBaseUrl = "http://api.tumblr.com/v2/blog";
-            string api = "posts";
-            string type = "text";
-            string apiKey = context.GetConfigValue("Tumblr-apikey");
 
             AtomFeed feed = new AtomFeed();
             List<AtomItem> items = new List<AtomItem>();
@@ -89,10 +203,9 @@ namespace Terradue.OpenSearch.Tumblr {
             int offset = Int32.Parse(parameters["startIndex"] != null ? parameters["startIndex"] : "0");
             string q = parameters["q"] + (this.Tags != null && this.Tags != string.Empty ? "," + this.Tags : "");
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tumblrBaseUrl+"/"+blogName+".tumblr.com/"+api+"/"+type
-                                                                       +"?api_key="+apiKey
-                                                                       +"&limit="+count
-                                                                       +"&offset="+offset);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"/"+Application.ApiType
+                                                                       +"?api_key="+Application.ApiKey+"&limit="+count+"&offset="+offset);
+
             request.Method = "GET";
             request.ContentType = "application/json"; 
 
@@ -118,6 +231,11 @@ namespace Terradue.OpenSearch.Tumblr {
 
         }
 
+        /// <summary>
+        /// Gets the query settings.
+        /// </summary>
+        /// <returns>The query settings.</returns>
+        /// <param name="ose">Ose.</param>
         public QuerySettings GetQuerySettings(OpenSearchEngine ose) {
             IOpenSearchEngineExtension osee = ose.GetExtensionByDiscoveryContentType(this.DefaultMimeType);
             if (osee == null)
@@ -125,14 +243,23 @@ namespace Terradue.OpenSearch.Tumblr {
             return new QuerySettings(this.DefaultMimeType, osee.ReadNative);
         }
 
+        /// <summary>
+        /// Gets the default MIME-type that the entity can be searched for
+        /// </summary>
+        /// <value>The default MIME-type.</value>
         public string DefaultMimeType {
             get {
                 return "application/atom+xml";
             }
         }
 
+        /// <summary>
+        /// Create the OpenSearch Request for the requested mime-type the specified type and parameters.
+        /// </summary>
+        /// <param name="mimetype">Mime-Type requested to the OpenSearchable entity</param>
+        /// <param name="parameters">Parameters of the request</param>
         public OpenSearchRequest Create(string mimetype, System.Collections.Specialized.NameValueCollection parameters) {
-            UriBuilder url = new UriBuilder(context.BaseUrl);
+            UriBuilder url = new UriBuilder(this.BaseUrl);
             url.Path += "/"+this.Identifier+"/";
             var array = (from key in parameters.AllKeys
                          from value in parameters.GetValues(key)
@@ -149,6 +276,10 @@ namespace Terradue.OpenSearch.Tumblr {
             return request;
         }
 
+        /// <summary>
+        /// Get the entity's OpenSearchDescription.
+        /// </summary>
+        /// <returns>The OpenSearchDescription describing the IOpenSearchable.</returns>
         public Terradue.OpenSearch.Schema.OpenSearchDescription GetOpenSearchDescription() {
             OpenSearchDescription OSDD = new OpenSearchDescription();
 
@@ -169,7 +300,7 @@ namespace Terradue.OpenSearch.Tumblr {
             NameValueCollection query = new NameValueCollection();
             string[] queryString;
 
-            urib = new UriBuilder(context.BaseUrl);
+            urib = new UriBuilder(this.BaseUrl);
             urib.Path = String.Format("/{0}/search",this.Identifier);
             query.Add(this.GetOpenSearchParameters("application/atom+xml"));
 
@@ -195,18 +326,36 @@ namespace Terradue.OpenSearch.Tumblr {
             return OSDD;
         }
 
+        /// <summary>
+        /// Gets the OpenSearch parameters for a given Mime-Type.
+        /// </summary>
+        /// <returns>OpenSearch parameters NameValueCollection.</returns>
+        /// <param name="mimeType">MIME type for the requested parameters</param>
         public System.Collections.Specialized.NameValueCollection GetOpenSearchParameters(string mimeType) {
             return OpenSearchFactory.GetBaseOpenSearchParameter();
         }
 
+        /// <summary>
+        /// Get the total of possible results for the OpenSearchable entity
+        /// </summary>
+        /// <returns>a unsigned long number representing the number of items searchable</returns>
         public ulong TotalResults() {
             return 0;
         }
 
+        /// <summary>
+        /// Optional function that apply to the result after the search and before the result is returned by OpenSearchEngine.
+        /// </summary>
+        /// <param name="osr">IOpenSearchResult cotnaing the result of the a search</param>
         public void ApplyResultFilters(ref IOpenSearchResult osr) {}
 
+        /// <summary>
+        /// Gets the search base URL.
+        /// </summary>
+        /// <returns>The search base URL.</returns>
+        /// <param name="mimeType">MIME type.</param>
         public OpenSearchUrl GetSearchBaseUrl(string mimeType) {
-            return new OpenSearchUrl (string.Format("{0}/{1}/search", context.BaseUrl, "blog"));
+            return new OpenSearchUrl (string.Format("{0}/{1}/search", this.BaseUrl, "blog"));
         }
     }
 
