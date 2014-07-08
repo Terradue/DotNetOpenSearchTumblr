@@ -164,7 +164,7 @@ namespace Terradue.OpenSearch.Tumblr {
 
             List<TumblrFeed> result = new List<TumblrFeed>();
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"/"+Application.ApiType+"?api_key="+Application.ApiKey);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"?api_key="+Application.ApiKey);
             request.Method = "GET";
             request.ContentType = "application/json"; 
 
@@ -181,6 +181,7 @@ namespace Terradue.OpenSearch.Tumblr {
                 news.Author = post.blog_name;
                 news.Time = post.date;
                 news.Tags = String.Join(",", post.tags);
+                news.Content = post.type;
 
                 result.Add(news);
             }
@@ -216,6 +217,8 @@ namespace Terradue.OpenSearch.Tumblr {
             foreach(TumblrResponsePost post in response.response.posts){
                 DateTimeOffset time = new DateTimeOffset(post.date);
                 AtomItem item = new AtomItem(post.title, post.body, new Uri(post.short_url), post.id.ToString(), time);
+                item.PublishDate = time;
+                item.Categories.Add(new SyndicationCategory(post.type));
                 items.Add(item);
             }
 
