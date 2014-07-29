@@ -176,7 +176,7 @@ namespace Terradue.OpenSearch.Tumblr {
                 TumblrFeed news = new TumblrFeed(this.BaseUrl);
                 news.Identifier = post.id.ToString();
                 news.Title = post.title;
-                news.Abstract = post.body;
+                news.Abstract = (post.caption != null ? post.caption : post.body);
                 news.Url = post.short_url;
                 news.Author = post.blog_name;
                 news.Time = post.date;
@@ -422,6 +422,8 @@ namespace Terradue.OpenSearch.Tumblr {
         public string blog_name {get; set; }
         [DataMember]
         public long id {get; set; }
+        [DataMember]
+        public string caption {get; set; }
         [DataMember]
         public string post_url {get; set; }
         [DataMember]
