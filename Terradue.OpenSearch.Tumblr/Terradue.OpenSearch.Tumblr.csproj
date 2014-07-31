@@ -34,6 +34,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Terradue.ServiceModel.Syndication">
+      <HintPath>..\packages\Terradue.ServiceModel.Syndication.1.0.0.0\lib\net40\Terradue.ServiceModel.Syndication.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,10 +51,6 @@
     <ProjectReference Include="..\Terradue.OpenSearch\Terradue.OpenSearch.csproj">
       <Project>{EA911C65-7F54-4909-97AB-AF66C8069D3A}</Project>
       <Name>Terradue.OpenSearch</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Terradue.ServiceModel.Syndication\Terradue.ServiceModel.Syndication.csproj">
-      <Project>{729A82DF-D3CE-4A1A-BA83-0508F0362DB5}</Project>
-      <Name>Terradue.ServiceModel.Syndication</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
