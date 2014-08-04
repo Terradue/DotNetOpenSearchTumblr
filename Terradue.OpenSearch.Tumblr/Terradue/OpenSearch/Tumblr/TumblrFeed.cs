@@ -1,23 +1,31 @@
-﻿using System;
-using System.Web;
-using System.Net;
-using System.IO;
-using System.Text;
+﻿//
+//  TumblrFeed.cs
+//
+//  Author:
+//       Enguerran Boissier <enguerran.boissier@terradue.com>
+//
+//  Copyright (c) 2014 Terradue
 
-using System.Runtime.Serialization;
-using System.Collections.Generic;
-using Terradue.OpenSearch;
-using Terradue.OpenSearch.Request;
-using Terradue.OpenSearch.Schema;
+
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Xml;
+using System.IO;
 using System.Linq;
-using Terradue.OpenSearch.Result;
-using Terradue.OpenSearch.Response;
-using Terradue.OpenSearch.Engine;
-using Terradue.ServiceModel.Syndication;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Web;
+using System.Xml;
 using ServiceStack.Text;
+using Terradue.OpenSearch;
+using Terradue.OpenSearch.Engine;
+using Terradue.OpenSearch.Request;
+using Terradue.OpenSearch.Response;
+using Terradue.OpenSearch.Result;
+using Terradue.OpenSearch.Schema;
+using Terradue.ServiceModel.Syndication;
 
 namespace Terradue.OpenSearch.Tumblr {
 
@@ -202,7 +210,7 @@ namespace Terradue.OpenSearch.Tumblr {
 
             int count = Int32.Parse(parameters["count"] != null ? parameters["count"] : "20");
             int offset = Int32.Parse(parameters["startIndex"] != null ? parameters["startIndex"] : "0");
-            string q = parameters["q"] + (this.Tags != null && this.Tags != string.Empty ? "," + this.Tags : "");
+            string xq = parameters["q"] + (this.Tags != null && this.Tags != string.Empty ? "," + this.Tags : "");
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"/"+Application.ApiType
                                                                        +"?api_key="+Application.ApiKey+"&limit="+count+"&offset="+offset);
@@ -295,7 +303,7 @@ namespace Terradue.OpenSearch.Tumblr {
             OSDD.Language = "en-us";
             OSDD.OutputEncoding = "UTF-8";
             OSDD.InputEncoding = "UTF-8";
-            OSDD.Description = "This Search Service performs queries in the available services of Tep QuickWin. There are several URL templates that return the results in different formats (RDF, ATOM or KML). This search service is in accordance with the OGC 10-032r3 specification.";
+            OSDD.Description = "This Search Service performs queries in the available tumblr feeds. There are several URL templates that return the results in different formats (RDF, ATOM or KML). This search service is in accordance with the OGC 10-032r3 specification.";
 
             // The new URL template list 
             Hashtable newUrls = new Hashtable();
