@@ -355,12 +355,6 @@ namespace Terradue.OpenSearch.Tumblr {
         }
 
         /// <summary>
-        /// Optional function that apply to the result after the search and before the result is returned by OpenSearchEngine.
-        /// </summary>
-        /// <param name="osr">IOpenSearchResult cotnaing the result of the a search</param>
-        public void ApplyResultFilters(ref IOpenSearchResult osr) {}
-
-        /// <summary>
         /// Gets the search base URL.
         /// </summary>
         /// <returns>The search base URL.</returns>
@@ -368,6 +362,13 @@ namespace Terradue.OpenSearch.Tumblr {
         public OpenSearchUrl GetSearchBaseUrl(string mimeType) {
             return new OpenSearchUrl (string.Format("{0}/{1}/search", this.BaseUrl, "blog"));
         }
+
+        /// <summary>
+        /// Optional function that apply to the result after the search and before the result is returned by OpenSearchEngine.
+        /// </summary>
+        /// <param name="osr">IOpenSearchResult cotnaing the result of the a search</param>
+        /// <param name="request">Request.</param>
+        public void ApplyResultFilters(OpenSearchRequest request, ref IOpenSearchResultCollection osr) {}
     }
 
     [DataContract]
