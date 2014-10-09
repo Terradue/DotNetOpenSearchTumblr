@@ -37,6 +37,9 @@
     <Reference Include="Terradue.ServiceModel.Syndication">
       <HintPath>..\packages\Terradue.ServiceModel.Syndication.1.0.0.0\lib\net40\Terradue.ServiceModel.Syndication.dll</HintPath>
     </Reference>
+    <Reference Include="Terradue.OpenSearch">
+      <HintPath>..\packages\Terradue.OpenSearch.1.7.0.1\lib\net40\Terradue.OpenSearch.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,9 +51,8 @@
       <Project>{2E8D7875-8347-4205-936B-F1BBA2164D87}</Project>
       <Name>Terradue.Portal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Terradue.OpenSearch\Terradue.OpenSearch.csproj">
-      <Project>{EA911C65-7F54-4909-97AB-AF66C8069D3A}</Project>
-      <Name>Terradue.OpenSearch</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
