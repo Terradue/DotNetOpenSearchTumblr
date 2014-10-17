@@ -47,12 +47,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Terradue.Portal\Terradue.Portal.csproj">
-      <Project>{2E8D7875-8347-4205-936B-F1BBA2164D87}</Project>
-      <Name>Terradue.Portal</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
 </Project>
