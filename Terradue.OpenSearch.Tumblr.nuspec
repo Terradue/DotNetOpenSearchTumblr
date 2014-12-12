@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Terradue.OpenSearch.Tumblr</id>
+    <version>1.0.1</version>
+    <title>Terradue.OpenSearch.Tumblr</title>
+    <authors>Terradue</authors>
+    <projectUrl>https://github.com/Terradue/DotNetOpenSearchTumblr</projectUrl>
+    <licenseUrl>https://github.com/Terradue/DotNetOpenSearchTumblr/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>DotNetOpenSearchTumblr is a library targeting .NET 4.0 and above providing an easy way to perform opensearch requests on the Tumblr API.</description>
+    <summary>Tumblr opensearch library for .Net</summary>
+    <dependencies>
+      <dependency id="TweetSharp" version="2.3.1" />
+      <dependency id="Terradue.OpenSearch" version="[1.8,1.9)" />
+      <dependency id="Terradue.ServiceModel.Syndication" version="1.7.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Terradue.OpenSearch.Tumblr/bin/Terradue.OpenSearch.Tumblr.dll" target="lib/net40/Terradue.OpenSearch.Tumblr.dll" />
+  </files>
+
+</package>
