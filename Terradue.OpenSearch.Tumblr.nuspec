@@ -11,9 +11,9 @@
     <description>DotNetOpenSearchTumblr is a library targeting .NET 4.0 and above providing an easy way to perform opensearch requests on the Tumblr API.</description>
     <summary>Tumblr opensearch library for .Net</summary>
     <dependencies>
-      <dependency id="TweetSharp" version="2.3.1" />
+      <dependency id="ServiceStack.Text" version="3.9.71" />
       <dependency id="Terradue.OpenSearch" version="[1.8,1.9)" />
-      <dependency id="Terradue.ServiceModel.Syndication" version="1.7.0.0" />
+      <dependency id="Terradue.ServiceModel.Syndication" version="1.0.0.0" />
     </dependencies>
   </metadata>
   <files>
