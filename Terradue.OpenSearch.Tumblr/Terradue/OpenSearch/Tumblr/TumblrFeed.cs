@@ -369,6 +369,10 @@ namespace Terradue.OpenSearch.Tumblr {
         /// <param name="osr">IOpenSearchResult cotnaing the result of the a search</param>
         /// <param name="request">Request.</param>
         public void ApplyResultFilters(OpenSearchRequest request, ref IOpenSearchResultCollection osr) {}
+
+        public ParametersResult DescribeParameters() {
+            return OpenSearchFactory.GetDefaultParametersResult();
+        }
     }
 
     [DataContract]
