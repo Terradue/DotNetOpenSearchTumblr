@@ -373,6 +373,12 @@ namespace Terradue.OpenSearch.Tumblr {
         public ParametersResult DescribeParameters() {
             return OpenSearchFactory.GetDefaultParametersResult();
         }
+
+        public bool CanCache {
+            get {
+                return true;
+            }
+        }
     }
 
     [DataContract]
