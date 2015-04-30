@@ -246,8 +246,8 @@ namespace Terradue.OpenSearch.Tumblr {
             news.Identifier = post.id.ToString();
             switch (post.type) {
                 case "photo":
-                    break;
                     news.Title = post.photos[0].original_size.url;
+                    break;
                 case "text":
                     news.Title = post.title;
                     break;
