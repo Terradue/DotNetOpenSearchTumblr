@@ -172,7 +172,12 @@ namespace Terradue.OpenSearch.Tumblr {
 
             List<TumblrFeed> result = new List<TumblrFeed>();
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"?api_key="+Application.ApiKey);
+            string url = Application.ApiBaseUrl + "/" + blogName + ".tumblr.com/" + Application.ApiMethod;
+            if (!string.IsNullOrEmpty(Application.ApiType)) url += "/" + Application.ApiType;
+            url += "?api_key=" + Application.ApiKey;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
             request.Method = "GET";
             request.ContentType = "application/json"; 
 
@@ -181,17 +186,7 @@ namespace Terradue.OpenSearch.Tumblr {
 
             TumblrResponse response = JsonSerializer.DeserializeFromString<TumblrResponse>(text);
             foreach(TumblrResponsePost post in response.response.posts){
-                TumblrFeed news = new TumblrFeed(this.BaseUrl);
-                news.Identifier = post.id.ToString();
-                news.Title = post.title;
-                news.Abstract = (post.caption != null ? post.caption : post.body);
-                news.Url = post.short_url;
-                news.Author = post.blog_name;
-                news.Time = post.date;
-                news.Tags = String.Join(",", post.tags);
-                news.Content = post.type;
-
-                result.Add(news);
+                result.Add(TumblrPostToTumblrFeed(post));
             }
             return result;
         }
@@ -212,8 +207,11 @@ namespace Terradue.OpenSearch.Tumblr {
             int offset = Int32.Parse(parameters["startIndex"] != null ? parameters["startIndex"] : "0");
             string xq = parameters["q"] + (this.Tags != null && this.Tags != string.Empty ? "," + this.Tags : "");
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Application.ApiBaseUrl+"/"+blogName+".tumblr.com/"+Application.ApiMethod+"/"+Application.ApiType
-                                                                       +"?api_key="+Application.ApiKey+"&limit="+count+"&offset="+offset);
+            string url = Application.ApiBaseUrl + "/" + blogName + ".tumblr.com/" + Application.ApiMethod;
+            if (!string.IsNullOrEmpty(Application.ApiType)) url += "/" + Application.ApiType;
+            url += "?api_key=" + Application.ApiKey + "&limit=" + count + "&offset=" + offset;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Method = "GET";
             request.ContentType = "application/json"; 
@@ -223,10 +221,11 @@ namespace Terradue.OpenSearch.Tumblr {
             TumblrResponse response = JsonSerializer.DeserializeFromString<TumblrResponse>(text);
 
             foreach(TumblrResponsePost post in response.response.posts){
-                DateTimeOffset time = new DateTimeOffset(post.date);
-                AtomItem item = new AtomItem(post.title, post.body, new Uri(post.short_url), post.id.ToString(), time);
+                TumblrFeed news = TumblrPostToTumblrFeed(post);
+                DateTimeOffset time = new DateTimeOffset(news.Time);
+                AtomItem item = new AtomItem(news.Title, news.Abstract, new Uri(news.Url), news.Identifier, time);
                 item.PublishDate = time;
-                item.Categories.Add(new SyndicationCategory(post.type));
+                item.Categories.Add(new SyndicationCategory(news.Content));
                 items.Add(item);
             }
 
@@ -240,6 +239,31 @@ namespace Terradue.OpenSearch.Tumblr {
 
             return;
 
+        }
+
+        private TumblrFeed TumblrPostToTumblrFeed(TumblrResponsePost post){
+            TumblrFeed news = new TumblrFeed(this.BaseUrl);
+            news.Identifier = post.id.ToString();
+            switch (post.type) {
+                case "photo":
+                    break;
+                    news.Title = post.photos[0].original_size.url;
+                case "text":
+                    news.Title = post.title;
+                    break;
+                default:
+                    news.Title = post.title;
+                    break;
+            }
+
+            news.Abstract = (post.caption != null ? post.caption : post.body);
+            news.Url = post.short_url;
+            news.Author = post.blog_name;
+            news.Time = post.date;
+            news.Tags = String.Join(",", post.tags);
+            news.Content = post.type;
+
+            return news;
         }
 
         /// <summary>
@@ -475,6 +499,28 @@ namespace Terradue.OpenSearch.Tumblr {
         public string title {get; set; }
         [DataMember]
         public string body {get; set; }
+        [DataMember]
+        public List<TumblrPhoto> photos {get; set; }
+    }
+
+    [DataContract]
+    public class TumblrPhoto{
+        [DataMember]
+        public string caption {get; set; }
+        [DataMember]
+        public List<Photo> alt_sizes {get; set; }
+        [DataMember]
+        public Photo original_size {get; set; }
+    }
+
+    [DataContract]
+    public class Photo{
+        [DataMember]
+        public int width {get; set; }
+        [DataMember]
+        public int height {get; set; }
+        [DataMember]
+        public string url {get; set; }
     }
 }
 
