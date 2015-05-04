@@ -63,7 +63,7 @@ namespace Terradue.OpenSearch.Tumblr {
         public TumblrApplication(string apiKey){
             this.ApiKey = apiKey;
             this.ApiMethod = "posts"; //Retrieve Published Posts
-            this.ApiType = "text";
+            this.ApiType = ""; //get all types
             this.ApiBaseUrl = "http://api.tumblr.com/v2/blog";
         }
 
