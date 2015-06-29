@@ -371,14 +371,6 @@ namespace Terradue.OpenSearch.Tumblr {
         }
 
         /// <summary>
-        /// Get the total of possible results for the OpenSearchable entity
-        /// </summary>
-        /// <returns>a unsigned long number representing the number of items searchable</returns>
-        public long GetTotalResults(string mimetype, NameValueCollection parameters) {
-            return 0;
-        }
-
-        /// <summary>
         /// Gets the search base URL.
         /// </summary>
         /// <returns>The search base URL.</returns>
@@ -401,6 +393,12 @@ namespace Terradue.OpenSearch.Tumblr {
         public bool CanCache {
             get {
                 return true;
+            }
+        }
+
+        public long TotalResults {
+            get {
+                return 0;
             }
         }
     }
