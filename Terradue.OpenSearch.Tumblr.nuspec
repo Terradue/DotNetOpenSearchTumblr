@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Terradue.OpenSearch.Tumblr</id>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
     <title>Terradue.OpenSearch.Tumblr</title>
     <authors>Terradue</authors>
     <projectUrl>https://github.com/Terradue/DotNetOpenSearchTumblr</projectUrl>
@@ -12,7 +12,7 @@
     <summary>Tumblr opensearch library for .Net</summary>
     <dependencies>
       <dependency id="ServiceStack.Text" version="3.9.71" />
-      <dependency id="Terradue.OpenSearch" version="[1.10,1.11)" />
+      <dependency id="Terradue.OpenSearch" version="[1.11,1.12)" />
       <dependency id="Terradue.ServiceModel.Syndication" version="[1.0,1.1)" />
     </dependencies>
   </metadata>
