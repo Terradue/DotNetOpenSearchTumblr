@@ -224,12 +224,13 @@ namespace Terradue.OpenSearch.Tumblr {
                 TumblrFeed news = TumblrPostToTumblrFeed(post);
                 DateTimeOffset time = new DateTimeOffset(news.Time);
                 AtomItem item = new AtomItem(news.Title, news.Abstract, new Uri(news.Url), news.Identifier, time);
-                item.PublishDate = time;
+                item.PublishDate = news.Time;
                 item.Categories.Add(new SyndicationCategory(news.Content));
                 items.Add(item);
             }
 
             feed.Items = items;
+            feed.TotalResults = response.response.total_posts;
 
             var sw = XmlWriter.Create(input);
             Atom10FeedFormatter atomFormatter = new Atom10FeedFormatter(feed.Feed);
