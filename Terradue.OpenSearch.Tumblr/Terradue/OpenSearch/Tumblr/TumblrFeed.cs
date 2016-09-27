@@ -181,8 +181,13 @@ namespace Terradue.OpenSearch.Tumblr {
             request.Method = "GET";
             request.ContentType = "application/json"; 
 
-            StreamReader reader = new StreamReader(request.GetResponse().GetResponseStream());
-            string text = reader.ReadToEnd();
+            string text = null;
+            using (var httpresponse = request.GetResponse()){
+                using (var stream = httpresponse.GetResponseStream()){
+                    StreamReader reader = new StreamReader(stream);
+                    text = reader.ReadToEnd();
+                }
+            }
 
             TumblrResponse response = JsonSerializer.DeserializeFromString<TumblrResponse>(text);
             foreach(TumblrResponsePost post in response.response.posts){
@@ -214,10 +219,16 @@ namespace Terradue.OpenSearch.Tumblr {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
             request.Method = "GET";
-            request.ContentType = "application/json"; 
+            request.ContentType = "application/json";
 
-            StreamReader reader = new StreamReader(request.GetResponse().GetResponseStream());
-            string text = reader.ReadToEnd();
+            string text = null;
+            using (var httpresponse = request.GetResponse()){
+                using (var stream = httpresponse.GetResponseStream()){
+                    StreamReader reader = new StreamReader(stream);
+                    text = reader.ReadToEnd();
+                }
+            } 
+            
             TumblrResponse response = JsonSerializer.DeserializeFromString<TumblrResponse>(text);
 
             foreach(TumblrResponsePost post in response.response.posts){
@@ -393,6 +404,7 @@ namespace Terradue.OpenSearch.Tumblr {
         }
 
         public void ApplyResultFilters(OpenSearchRequest request, ref IOpenSearchResultCollection osr, string finalContentType) {}
+
     }
 
     [DataContract]
